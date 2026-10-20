@@ -3,8 +3,9 @@
 @tailwind utilities;
 
 /* ------------------------------------------------------------------ */
-/*  National Bus Digitization Project — Premium Light Design System    */
-/*  Canvas #FFFFFF · Surface #F9FAFB · Ink #111827 · Emerald #059669   */
+/*  Maga — Neo-Apple 3D Tactile Design System                          */
+/*  Cream canvas #F4F2EE · matte-white objects · deep emerald #0E6A47  */
+/*  amber glass #FFB347 → #FF7B00 · pill-shaped, bevel-lit controls    */
 /* ------------------------------------------------------------------ */
 
 @layer base {
@@ -13,87 +14,84 @@
   }
 
   body {
-    @apply bg-white text-ink font-sans antialiased;
+    @apply bg-cream text-ink font-sans antialiased;
     text-rendering: optimizeLegibility;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
   }
 
   ::selection {
-    background: #d1fae5;
-    color: #064e3b;
+    background: #a9dcc2;
+    color: #063724;
   }
 
-  /* Slim, discreet scrollbars that respect the light theme */
   * {
     scrollbar-width: thin;
-    scrollbar-color: #d1d5db transparent;
+    scrollbar-color: #d8d0bf transparent;
   }
   *::-webkit-scrollbar {
     width: 6px;
     height: 6px;
   }
   *::-webkit-scrollbar-thumb {
-    background: #d1d5db;
+    background: #d8d0bf;
     border-radius: 999px;
   }
   *::-webkit-scrollbar-thumb:hover {
-    background: #9ca3af;
+    background: #bdb29a;
   }
   *::-webkit-scrollbar-track {
     background: transparent;
   }
 
-  /* Consistent, accessible emerald focus ring */
   :focus-visible {
-    outline: 2px solid rgba(16, 185, 129, 0.55);
+    outline: 2px solid rgba(14, 106, 71, 0.55);
     outline-offset: 2px;
   }
 }
 
 @layer components {
-  /* Card — flat, 1px light-ash border, whisper-soft shadow */
+  /* Matte 3D object resting on the cream canvas */
   .card {
-    @apply rounded-2xl border border-ash-200 bg-white shadow-card;
+    @apply rounded-3xl border border-white bg-white shadow-card;
   }
 
   .card-hover {
-    @apply transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift hover:border-ash-300;
+    @apply transition-all duration-300 hover:-translate-y-[3px] hover:shadow-lift;
   }
 
-  /* Inputs — light ash border, emerald focus ring */
+  /* Neumorphic input well — pressed into the surface */
   .input {
-    @apply h-10 w-full rounded-[10px] border border-ash-200 bg-white px-3.5 text-sm text-ink
+    @apply h-11 w-full rounded-2xl border border-cream-line bg-[#FBFAF6] px-4 text-sm text-ink shadow-insetSoft
       placeholder:text-ash-400 transition-all duration-200
-      hover:border-ash-300 focus:border-brand-500 focus:outline-none
-      focus:ring-4 focus:ring-brand-500/10;
+      hover:border-[#D8D0BF] focus:border-brand-600 focus:bg-white focus:outline-none
+      focus:ring-4 focus:ring-brand-600/10;
   }
 
   .label {
-    @apply mb-1.5 block text-[13px] font-medium text-ash-700;
+    @apply mb-1.5 block text-[13px] font-semibold text-ash-700;
   }
 
   /* Table */
   .th {
-    @apply px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-ash-500;
+    @apply px-4 py-3 text-left text-[11px] font-bold uppercase tracking-[0.08em] text-ash-500;
   }
   .td {
     @apply px-4 py-3.5 text-sm text-ash-700;
   }
 
-  /* Kilometric / numeric alignment for data */
   .tnum {
     font-variant-numeric: tabular-nums;
   }
 
-  /* Schematic map backdrop (live operations) */
+  /* Schematic map backdrop */
   .map-grid {
     background-image:
-      linear-gradient(to right, rgba(17, 24, 39, 0.045) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(17, 24, 39, 0.045) 1px, transparent 1px);
+      linear-gradient(to right, rgba(23, 33, 28, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(23, 33, 28, 0.045) 1px, transparent 1px);
     background-size: 44px 44px;
   }
 
   .map-water {
-    background: linear-gradient(160deg, #ecfdf5 0%, #f0fdfa 45%, #f9fafb 100%);
+    background: linear-gradient(160deg, #edf7f1 0%, #f7f4ec 55%, #f4f2ee 100%);
   }
 }

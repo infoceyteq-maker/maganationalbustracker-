@@ -1,64 +1,90 @@
-# Maga · National Bus Tracker
+# Maga · National Bus Digitization System
 
-**National Bus Digitization Project** — a premium, modern operations console (admin dashboard) and mobile-app
-UI for the national bus network, built with **Next.js 15 (App Router)**, **Tailwind CSS** and a
-**shadcn-style** component system.
+**Base44 Challenge MVP** — a strict **role-based (RBAC)** operations console for digitizing the national bus
+network, built with **Next.js 15 (App Router)**, **Tailwind CSS** and shadcn-style components.
 
-## Design System — “Premium Light”
+## The One Rule: Admins Never Enter Bus Data
+
+> **No admin — Master, Provincial or Depot — can add or edit Bus or Driver details.**
+> Records are born *only* through **Crew Self-Registration**. The state verifies, recommends and permits.
+
+```
+Crew / Owner (Crew App)          Depot Admin (Timekeeper)      Provincial Admin           Automation
+Self-registers bus + crew   →    Physical 7-point checklist →  Grant Final Permit    →    Permit issued ·
+Uploads documents                "Recommend to Province"                                GPS unlocked ·
+                                                                                          crew notified
+```
+
+### Roles (switch live in the top bar — the whole console rebuilds per role)
+
+| Role | Scope | Can | Locked |
+| --- | --- | --- | --- |
+| **Master Admin** (Ministry) | Island-wide | Create Provincial/Depot admin accounts · national analytics | 🔒 Add Bus · 🔒 Add Driver · 🔒 Verify/Permit |
+| **Provincial Admin** | One province | Review recommended records · **Grant Final Permit** | 🔒 Data entry · 🔒 Create admins · 🔒 Verify |
+| **Depot Admin** (Timekeeper) | One depot | View new self-registrations · physical checklist · **Recommend to Province** | 🔒 Data entry · 🔒 Grant permits |
+| **Bus Crew / Owner** | Own vehicles | Self-register · upload documents · track status | 🔒 Everything administrative |
+
+The **Master Admin dashboard deliberately displays disabled, padlocked “Add Bus / Add Driver” pills** next to the
+working **“Create Admin”** function — compliance you can see and click (they explain themselves via toast).
+The full permission matrix lives in **Access & RBAC Policy**.
+
+## Design System — “Neo-Apple 3D Tactile”
 
 | Token | Value | Usage |
 | --- | --- | --- |
-| Canvas | `#FFFFFF` | Primary background |
-| Surface | `#F9FAFB` / `#F3F4F6` | Cards, sidebar, input fills |
-| Ink | `#111827` | Headings & primary text |
-| Dark Ash | `#4B5563` / `#374151` | Secondary text & icons |
-| Brand Emerald | `#059669` → `#10B981` | Primary CTAs, active states, live/success signals |
+| Cream canvas | `#F4F2EE` | Warm off-white background |
+| Matte white | `#FFFFFF` · `rounded-3xl` · `10px 20px 30px rgba(0,0,0,.05)` | Cards as physical 3D objects |
+| Deep emerald | `#0E6A47` | Solid pill buttons with top-bevel light (3D extruded, sinks on press) |
+| Amber glass | `#FFB347 → #FF7B00` | Highlight cards · Grant Final Permit · peak moments |
+| Ink | `#17211C` | Headings & primary text |
 
-- **Typography:** Plus Jakarta Sans (800 headings · 500 labels · 400 body), Inter fallback.
-- **Components:** emerald primary buttons with a soft lift, outlined secondaries, flat cards with a 1px
-  light-ash border and a whisper shadow, inputs with an emerald focus ring, generous whitespace throughout.
-- **No dark mode** — the interface is unapologetically light, corporate and calm.
+Soft neumorphism (pressed input wells, neu icon tiles) + glassy gradients (frosted navbar, amber orbs).
+Typography: **Plus Jakarta Sans** (800/700/500/400).
 
-## What's Inside
+## Try the end-to-end workflow (90 seconds)
 
-### Base layout (this milestone)
-- **`components/layout/Sidebar.tsx`** — light-ash rail, emerald active states, approvals badge, GPS-feed status card, collapse-to-icons.
-- **`components/layout/Navbar.tsx`** — breadcrumb + page title, global search (buses & routes), live clock, notifications, profile menu, **Start Trip** CTA.
-- **`components/dashboard/MetricCard.tsx`** — KPI tile: extra-bold value, trend chip, sparkline, icon tile.
-- **`components/dashboard/DataTable.tsx`** — the standard grid: search, status filter chips, sortable headers, pagination, CSV export.
-- **`components/ui/*`** — shadcn-style `Button`, `Card`, `Badge`, `Input`, plus `Avatar`, `ProgressBar`, `RouteChip` primitives.
+1. **Crew App** (top-right role switch) → *Register My Bus* → enter a plate (e.g. `NC-7777`), attach 4 documents → **Submit**.
+2. **Depot** role → your bus is in the *Verification Queue* → tick all 7 physical checks → **Recommend to Province** unlocks.
+3. **Provincial** role → *Final Approvals* → review depot evidence → **Grant Final Permit** → automation log fires (permit no., GPS unlock, SMS).
+4. **Master** role → *National Register* — your bus now appears, read-only, origin-stamped “Crew Self-Registration”.
+   And in *Admin Accounts*, create a Provincial/Depot officer — the Master’s only creation power.
 
-### Views (11, all interactive)
-**Overview** (KPIs, ridership chart, fleet donut, live departures, ops feed) · **Live Operations** (schematic
-network map with selectable live buses) · **Trips & Schedules** (working *Start Trip / Complete* dispatch) ·
-**Fleet Management** · **Routes & Fares** · **Drivers & Crew** · **Depots** · **Approvals** (approve/reject
-updates the queue + sidebar badge) · **Reports & Analytics** · **Mobile Apps** (passenger search, passenger
-live-tracking, and a driver console with a working *START TRIP* duty flow) · **Settings** (profile form,
-toggles, and the design-token showcase).
+Scope is enforced everywhere: search, queues, badges and nav are filtered to the signed-in role’s province/depot/own vehicles.
 
-## Run Locally
+## Views
+
+- **Master:** Island Overview (amber digitization highlight, pipeline counters, province progress) · Approval Pipeline board ·
+  National Register (read-only, locked Add buttons) · Admin Accounts (working Create Admin + suspend) · Reports · Settings (+ token showcase)
+- **Provincial:** Final Approvals (evidence, audit trail, Grant Final Permit, live **Automation Log**) · Granted Permits register
+- **Depot:** Verification Queue + physical checklist workspace (Recommend unlocks at 7/7) · Sent to Province history
+- **Crew:** Self-Registration form (vehicle · people · route/depot · document uploads) · My Submissions with a 4-step live tracker
+- **All roles:** Access & RBAC Policy (flow + permission matrix, your role highlighted)
+
+## Run locally
 
 ```bash
 npm install
 npm run dev        # http://localhost:3000
-```
-
-```bash
 npm run typecheck  # strict TypeScript
-npm run build      # production build
+npm run build      # production build (149 kB first load, static)
 ```
 
-## Project Structure
+## Project structure
 
 ```
-app/            layout, globals (design tokens), dashboard shell
+app/            layout · globals (3D tactile tokens) · RBAC shell + workflow state
+lib/
+  roles.ts      role definitions, per-role navigation, permission copy
+  pipeline.ts   registration lifecycle, verification checklist, admin accounts, automation
+  data.ts       national reference data (routes, fleet, depots)
 components/
-  ui/           button · card · badge · input · primitives
-  layout/       Sidebar · Navbar
-  dashboard/    MetricCard · DataTable · Charts
-  views/        one component per console view
-lib/            nav model · reference dataset · utils (cn)
+  ui/           3D pill Button (+ LockedButton) · Card · Badge · Input · primitives
+  layout/       floating Sidebar (role-scoped) · glass Navbar (role switcher)
+  dashboard/    MetricCard (+ amber highlight) · DataTable · Charts
+  views/        MasterOverview · AdminAccounts · Registry · Pipeline · DepotVerification ·
+                ProvincialApprovals · CrewRegistration · AccessPolicy · Reports/Settings
 ```
 
-Data in `lib/data.ts` is representative of the Sri Lankan national network (SLTB + private operators,
-NTC route permits) and is shaped to drop in behind real APIs without UI changes.
+State (`registrations`, `admins`, `automation`) lives in the shell and is shaped exactly like the production
+API contract, so swapping the in-memory store for Base44/backend endpoints requires no UI changes. Server-side,
+admin tokens must reject bus/driver writes (`403 RBAC_DENY`) — the UI locks are honest mirrors of that wall.

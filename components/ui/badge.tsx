@@ -5,7 +5,7 @@ export type BadgeTone = 'emerald' | 'amber' | 'red' | 'gray' | 'blue' | 'dark';
 
 const tones: Record<BadgeTone, string> = {
   emerald: 'bg-brand-50 text-brand-700 ring-brand-600/20',
-  amber: 'bg-amber-50 text-amber-700 ring-amber-600/25',
+  amber: 'bg-[#FFF4E2] text-[#9A5A00] ring-tang-500/30',
   red: 'bg-red-50 text-red-700 ring-red-600/20',
   gray: 'bg-ash-100 text-ash-600 ring-ash-600/10',
   blue: 'bg-blue-50 text-blue-700 ring-blue-600/20',
@@ -13,8 +13,8 @@ const tones: Record<BadgeTone, string> = {
 };
 
 const dots: Record<BadgeTone, string> = {
-  emerald: 'bg-brand-500',
-  amber: 'bg-amber-500',
+  emerald: 'bg-brand-600',
+  amber: 'bg-tang-500',
   red: 'bg-red-500',
   gray: 'bg-ash-400',
   blue: 'bg-blue-500',
@@ -35,7 +35,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset',
+        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ring-inset',
         tones[tone],
         className,
       )}
@@ -46,9 +46,27 @@ export function Badge({
   );
 }
 
-/** Maps operational statuses to their semantic badge tone. */
+/** Maps operational + RBAC-pipeline statuses to their semantic badge tone. */
 export function statusTone(status: string): BadgeTone {
   switch (status) {
+    /* Pipeline */
+    case 'Permit Granted':
+    case 'Live Tracking Active':
+      return 'emerald';
+    case 'Pending Depot Verification':
+      return 'amber';
+    case 'Recommended to Province':
+      return 'blue';
+    case 'Returned for Correction':
+      return 'red';
+    /* Accounts */
+    case 'Active':
+      return 'emerald';
+    case 'Invitation Sent':
+      return 'blue';
+    case 'Suspended':
+      return 'red';
+    /* Operations */
     case 'On Route':
     case 'In Progress':
     case 'Operational':
@@ -67,7 +85,7 @@ export function statusTone(status: string): BadgeTone {
     case 'Boarding':
       return 'blue';
     default:
-      return 'gray'; // Scheduled / At Depot / Off Duty
+      return 'gray';
   }
 }
 

@@ -197,10 +197,10 @@ export const TOP_ROUTES = [
 ];
 
 export const FLEET_STATUS = [
-  { label: 'On Route', value: 12486, color: '#059669' },
-  { label: 'Boarding / Standby', value: 2134, color: '#34D399' },
-  { label: 'At Depot', value: 2918, color: '#D1D5DB' },
-  { label: 'Maintenance', value: 1402, color: '#9CA3AF' },
+  { label: 'On Route', value: 12486, color: '#0E6A47' },
+  { label: 'Boarding / Standby', value: 2134, color: '#FFB347' },
+  { label: 'At Depot', value: 2918, color: '#D8D0BF' },
+  { label: 'Maintenance', value: 1402, color: '#9AA39E' },
 ];
 
 export interface ActivityItem {

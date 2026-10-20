@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Maga · National Bus Tracker — Operations Console',
+  title: 'Maga · National Bus Digitization — RBAC Operations Console',
   description:
-    'National Bus Digitization Project — premium operations console for fleet, trips, routes and crew across the national bus network.',
+    'National Bus Digitization System with strict role-based access: crews self-register, depots verify, provinces grant permits, automation unlocks live tracking. Admins never enter bus or driver data.',
 };
 
 export const viewport: Viewport = {
-  themeColor: '#ffffff',
+  themeColor: '#F4F2EE',
   width: 'device-width',
   initialScale: 1,
 };

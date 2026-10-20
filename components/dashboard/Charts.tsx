@@ -1,5 +1,5 @@
-/* Lightweight SVG charts tuned to the premium light palette.
-   Emerald series · hairline ash grid · tabular numerals. */
+/* Lightweight SVG charts tuned to the 3D Tactile palette.
+   Deep-emerald series · amber-glass peak bars · warm hairline grid. */
 
 function smoothPath(points: { x: number; y: number }[]) {
   if (points.length < 2) return '';
@@ -23,7 +23,7 @@ export function Sparkline({
   data,
   width = 96,
   height = 32,
-  stroke = '#059669',
+  stroke = '#0E6A47',
 }: {
   data: number[];
   width?: number;
@@ -39,16 +39,17 @@ export function Sparkline({
   }));
   const line = smoothPath(points);
   const last = points[points.length - 1];
+  const onAmber = stroke === '#FFFFFF';
   return (
     <svg width={width} height={height} viewBox={`0 0 ${width} ${height}`} className="overflow-visible" aria-hidden>
-      <path d={`${line} L ${last.x},${height} L ${points[0].x},${height} Z`} fill={stroke} opacity={0.08} />
+      <path d={`${line} L ${last.x},${height} L ${points[0].x},${height} Z`} fill={stroke} opacity={onAmber ? 0.25 : 0.08} />
       <path d={line} fill="none" stroke={stroke} strokeWidth={1.8} strokeLinecap="round" />
-      <circle cx={last.x} cy={last.y} r={2.6} fill="#fff" stroke={stroke} strokeWidth={1.8} />
+      <circle cx={last.x} cy={last.y} r={2.6} fill={onAmber ? '#FF7B00' : '#fff'} stroke={stroke} strokeWidth={1.8} />
     </svg>
   );
 }
 
-/** Large area chart with grid, axis labels and hover titles. */
+/** Large area chart with warm grid, axis labels and hover titles. */
 export function AreaChart({
   data,
   labels,
@@ -82,34 +83,31 @@ export function AreaChart({
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="Trend chart">
       <defs>
         <linearGradient id="areaFill" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#10B981" stopOpacity="0.22" />
-          <stop offset="100%" stopColor="#10B981" stopOpacity="0.01" />
+          <stop offset="0%" stopColor="#0E6A47" stopOpacity="0.20" />
+          <stop offset="100%" stopColor="#0E6A47" stopOpacity="0.01" />
         </linearGradient>
       </defs>
 
       {gridYs.map((g, i) => (
         <g key={i}>
-          <line x1={PAD.left} x2={W - PAD.right} y1={g.y} y2={g.y} stroke="#F3F4F6" strokeWidth={1} />
-          <text x={PAD.left - 8} y={g.y + 3.5} textAnchor="end" fontSize={10.5} fill="#9CA3AF">
+          <line x1={PAD.left} x2={W - PAD.right} y1={g.y} y2={g.y} stroke="#EFEAE0" strokeWidth={1} />
+          <text x={PAD.left - 8} y={g.y + 3.5} textAnchor="end" fontSize={10.5} fill="#A8A29A">
             {g.label}
           </text>
         </g>
       ))}
 
-      <path
-        d={`${line} L ${points[points.length - 1].x},${PAD.top + innerH} L ${points[0].x},${PAD.top + innerH} Z`}
-        fill="url(#areaFill)"
-      />
-      <path d={line} fill="none" stroke="#059669" strokeWidth={2.4} strokeLinecap="round" />
+      <path d={`${line} L ${points[points.length - 1].x},${PAD.top + innerH} L ${points[0].x},${PAD.top + innerH} Z`} fill="url(#areaFill)" />
+      <path d={line} fill="none" stroke="#0E6A47" strokeWidth={2.6} strokeLinecap="round" />
 
       {points.map((p, i) => (
         <g key={i}>
           <circle cx={p.x} cy={p.y} r={10} fill="transparent">
             <title>{`${labels[i]} — ${p.v}${unit}`}</title>
           </circle>
-          <circle cx={p.x} cy={p.y} r={3} fill="#fff" stroke="#059669" strokeWidth={2} className="pointer-events-none" />
+          <circle cx={p.x} cy={p.y} r={3.2} fill="#fff" stroke="#0E6A47" strokeWidth={2.2} className="pointer-events-none" />
           {i % labelEvery === 0 && (
-            <text x={p.x} y={H - 8} textAnchor="middle" fontSize={10.5} fill="#9CA3AF">
+            <text x={p.x} y={H - 8} textAnchor="middle" fontSize={10.5} fill="#A8A29A">
               {labels[i]}
             </text>
           )}
@@ -119,15 +117,25 @@ export function AreaChart({
   );
 }
 
-/** Rounded bar chart for weekly revenue. */
+/** Rounded bar chart — the peak bar wears the amber-glass gradient. */
 export function BarChart({ data, labels, height = 200 }: { data: number[]; labels: string[]; height?: number }) {
   const W = 560;
   const H = height;
-  const PAD = { top: 18, bottom: 24 };
+  const PAD = { top: 20, bottom: 24 };
   const max = Math.max(...data) * 1.15;
   const bw = W / data.length;
   return (
     <svg viewBox={`0 0 ${W} ${H}`} className="w-full" role="img" aria-label="Bar chart">
+      <defs>
+        <linearGradient id="amberBar" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stopColor="#FFB347" />
+          <stop offset="100%" stopColor="#FF7B00" />
+        </linearGradient>
+        <linearGradient id="emeraldBar" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#2E9E6B" />
+          <stop offset="100%" stopColor="#0E6A47" />
+        </linearGradient>
+      </defs>
       {data.map((v, i) => {
         const h = ((H - PAD.top - PAD.bottom) * v) / max;
         const x = i * bw + bw * 0.24;
@@ -135,13 +143,13 @@ export function BarChart({ data, labels, height = 200 }: { data: number[]; label
         const isMax = v === Math.max(...data);
         return (
           <g key={i}>
-            <rect x={x} y={y} width={bw * 0.52} height={h} rx={6} fill={isMax ? '#059669' : '#A7F3D0'}>
+            <rect x={x} y={y} width={bw * 0.52} height={h} rx={8} fill={isMax ? 'url(#amberBar)' : 'url(#emeraldBar)'} opacity={isMax ? 1 : 0.55}>
               <title>{`${labels[i]} — LKR ${v}M`}</title>
             </rect>
-            <text x={x + bw * 0.26} y={y - 6} textAnchor="middle" fontSize={10.5} fontWeight={600} fill="#374151">
+            <text x={x + bw * 0.26} y={y - 6} textAnchor="middle" fontSize={10.5} fontWeight={700} fill="#374151">
               {v}
             </text>
-            <text x={x + bw * 0.26} y={H - 8} textAnchor="middle" fontSize={10.5} fill="#9CA3AF">
+            <text x={x + bw * 0.26} y={H - 8} textAnchor="middle" fontSize={10.5} fill="#A8A29A">
               {labels[i]}
             </text>
           </g>
@@ -151,23 +159,25 @@ export function BarChart({ data, labels, height = 200 }: { data: number[]; label
   );
 }
 
-/** Donut for fleet status mix. */
+/** Donut for distribution mixes. */
 export function DonutChart({
   segments,
   size = 168,
   thickness = 22,
+  centerLabel = 'registered buses',
 }: {
   segments: { label: string; value: number; color: string }[];
   size?: number;
   thickness?: number;
+  centerLabel?: string;
 }) {
   const total = segments.reduce((s, x) => s + x.value, 0);
   const r = (size - thickness) / 2;
   const c = 2 * Math.PI * r;
   let offset = 0;
   return (
-    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Fleet status distribution">
-      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#F3F4F6" strokeWidth={thickness} />
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-label="Distribution chart">
+      <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="#EFEAE0" strokeWidth={thickness} />
       {segments.map((s) => {
         const frac = s.value / total;
         const dash = frac * c;
@@ -191,11 +201,11 @@ export function DonutChart({
         offset += dash;
         return el;
       })}
-      <text x="50%" y="47%" textAnchor="middle" fontSize={21} fontWeight={800} fill="#111827">
+      <text x="50%" y="47%" textAnchor="middle" fontSize={21} fontWeight={800} fill="#17211C">
         {total.toLocaleString()}
       </text>
       <text x="50%" y="47%" dy={20} textAnchor="middle" fontSize={10.5} fill="#6B7280">
-        registered buses
+        {centerLabel}
       </text>
     </svg>
   );

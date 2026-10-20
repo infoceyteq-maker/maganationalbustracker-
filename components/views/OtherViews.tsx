@@ -1,89 +1,42 @@
 'use client';
 
 import * as React from 'react';
-import { Building2, Download, FileBarChart2, Save, Users } from 'lucide-react';
-import { cn, fmt } from '@/lib/utils';
-import { DEPOTS, HOURLY_BOARDINGS, HOURLY_LABELS, WEEK_LABELS, WEEK_REVENUE } from '@/lib/data';
-import { Button } from '@/components/ui/button';
+import { Download, FileBarChart2, Lock, Save } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { HOURLY_BOARDINGS, HOURLY_LABELS, WEEK_LABELS, WEEK_REVENUE } from '@/lib/data';
+import { Button, LockedButton } from '@/components/ui/button';
 import { Card, CardBody, CardHeader } from '@/components/ui/card';
-import { StatusBadge } from '@/components/ui/badge';
 import { Input } from '@/components/ui/input';
-import { ProgressBar } from '@/components/ui/primitives';
 import { AreaChart, BarChart } from '@/components/dashboard/Charts';
 
 type Notify = (title: string, detail?: string) => void;
-
-/* ------------------------------- Depots ------------------------------- */
-
-export function DepotsView({ notify }: { notify: Notify }) {
-  const totalBuses = DEPOTS.reduce((s, d) => s + d.buses, 0);
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-wrap items-end justify-between gap-3 animate-fade-up">
-        <div>
-          <h2 className="text-xl font-extrabold tracking-tight text-ink">Depot Network</h2>
-          <p className="mt-0.5 text-sm text-ash-500">
-            108 depots island-wide · showing the {DEPOTS.length} largest by fleet · {fmt(totalBuses)} buses homed in this view.
-          </p>
-        </div>
-        <Button variant="secondary" onClick={() => notify('Depot register (PDF)', 'The full 108-depot register export has been queued to your email.')}>
-          <Download className="h-4 w-4" /> Export Register
-        </Button>
-      </div>
-
-      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {DEPOTS.map((d, i) => (
-          <Card key={d.name} className="card-hover p-5 animate-fade-up" >
-            <div className="flex items-start justify-between gap-2" style={{ animationDelay: `${i * 40}ms` }}>
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-ash-100 text-ash-600">
-                <Building2 className="h-5 w-5" />
-              </span>
-              <StatusBadge status={d.status} />
-            </div>
-            <h3 className="mt-3 text-[15px] font-bold tracking-tight text-ink">{d.name}</h3>
-            <p className="text-[13px] text-ash-500">{d.region}</p>
-
-            <div className="mt-4">
-              <div className="flex items-center justify-between text-xs">
-                <span className="font-medium text-ash-500">Fleet utilisation</span>
-                <span className="tnum font-bold text-ink">{d.utilisation}%</span>
-              </div>
-              <ProgressBar value={d.utilisation} tone="emerald" className="mt-1.5" />
-            </div>
-
-            <dl className="tnum mt-4 flex items-center justify-between border-t border-ash-100 pt-3.5 text-sm">
-              <span className="text-ash-600">
-                <span className="font-bold text-ink">{d.buses}</span> / {d.capacity} buses
-              </span>
-              <span className="flex items-center gap-1.5 text-ash-600">
-                <Users className="h-3.5 w-3.5 text-ash-400" /> {fmt(d.staff)} staff
-              </span>
-            </dl>
-          </Card>
-        ))}
-      </div>
-    </div>
-  );
-}
 
 /* ------------------------------- Reports ------------------------------ */
 
 export function ReportsView({ notify }: { notify: Notify }) {
   const reports = [
-    { name: 'Daily Operations Summary', period: '19 Oct 2026', size: '2.4 MB · PDF' },
-    { name: 'Weekly Fare Revenue by Province', period: '13 – 19 Oct 2026', size: '1.1 MB · XLSX' },
-    { name: 'On-Time Performance Audit', period: 'September 2026', size: '3.8 MB · PDF' },
-    { name: 'Fleet Maintenance & Downtime', period: 'Q3 2026', size: '2.0 MB · PDF' },
-    { name: 'Digital Ticketing Adoption', period: 'September 2026', size: '940 KB · PDF' },
+    { name: 'Daily Operations Summary — Island-wide', period: '19 Oct 2026', size: '2.4 MB · PDF' },
+    { name: 'Permit Pipeline Throughput by Province', period: '13 – 19 Oct 2026', size: '1.1 MB · XLSX' },
+    { name: 'Depot Verification Turnaround Audit', period: 'September 2026', size: '3.8 MB · PDF' },
+    { name: 'Fleet Digitization Progress (RBAC Pipeline)', period: 'Q3 2026', size: '2.0 MB · PDF' },
+    { name: 'Fare Revenue — Permit-Live Fleet', period: 'September 2026', size: '940 KB · PDF' },
   ];
   return (
     <div className="space-y-6">
+      <div className="animate-fade-up">
+        <h2 className="text-xl font-extrabold tracking-tight text-ink">Reports & Analytics</h2>
+        <p className="mt-0.5 max-w-2xl text-sm leading-relaxed text-ash-500">
+          Island-wide reporting is a Master Admin privilege. Provincial and Depot admins receive the same pack filtered
+          to their own scope — automatically.
+        </p>
+      </div>
+
       <div className="grid gap-4 xl:grid-cols-3">
         <Card className="animate-fade-up">
-          <CardHeader title="Fare Revenue — Last 7 Days" subtitle="LKR millions, all channels" />
+          <CardHeader title="Fare Revenue — Last 7 Days" subtitle="LKR millions · amber marks the peak day" />
           <CardBody>
             <p className="tnum mb-1 text-2xl font-extrabold tracking-tight text-ink">
-              LKR 311.1M <span className="align-middle text-sm font-semibold text-brand-700">+6.4% WoW</span>
+              LKR 311.1M <span className="align-middle text-sm font-bold text-brand-700">+6.4% WoW</span>
             </p>
             <BarChart data={WEEK_REVENUE} labels={WEEK_LABELS} />
           </CardBody>
@@ -98,17 +51,15 @@ export function ReportsView({ notify }: { notify: Notify }) {
 
       <Card className="animate-fade-up">
         <CardHeader title="Published Reports" subtitle="Generated by the analytics pipeline at 04:00 daily" />
-        <ul className="divide-y divide-ash-100 px-5 pb-2 pt-2 sm:px-6">
+        <ul className="divide-y divide-ash-100 px-6 pb-3 pt-1">
           {reports.map((r) => (
             <li key={r.name} className="flex flex-wrap items-center gap-3 py-3.5">
-              <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-brand-50 text-brand-700">
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-[#F4F2EE] text-brand-700 shadow-neu">
                 <FileBarChart2 className="h-5 w-5" />
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-sm font-semibold text-ink">{r.name}</span>
-                <span className="block text-xs text-ash-500">
-                  {r.period} · {r.size}
-                </span>
+                <span className="block truncate text-sm font-bold text-ink">{r.name}</span>
+                <span className="block text-xs text-ash-500">{r.period} · {r.size}</span>
               </span>
               <Button variant="secondary" size="sm" onClick={() => notify('Download started', `“${r.name}” (${r.size}) is being prepared securely.`)}>
                 <Download className="h-3.5 w-3.5" /> Download
@@ -138,60 +89,43 @@ function Toggle({
   return (
     <div className="flex items-center justify-between gap-4 py-3.5">
       <div>
-        <p className="text-sm font-semibold text-ink">{label}</p>
+        <p className="text-sm font-bold text-ink">{label}</p>
         <p className="mt-0.5 text-[13px] leading-relaxed text-ash-500">{description}</p>
       </div>
       <button
         role="switch"
         aria-checked={on}
         aria-label={label}
-        onClick={() => {
-          setOn(!on);
-          onChange(!on);
-        }}
-        className={cn(
-          'relative h-6 w-11 shrink-0 rounded-full transition-colors duration-300',
-          on ? 'bg-brand-600' : 'bg-ash-200',
-        )}
+        onClick={() => { setOn(!on); onChange(!on); }}
+        className={cn('relative h-7 w-12 shrink-0 rounded-full transition-all duration-300', on ? 'bg-brand-600 shadow-btn3d' : 'bg-[#E7E1D3] shadow-insetSoft')}
       >
-        <span
-          className={cn(
-            'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-all duration-300',
-            on ? 'left-[22px]' : 'left-0.5',
-          )}
-        />
+        <span className={cn('absolute top-0.5 h-6 w-6 rounded-full bg-white shadow transition-all duration-300', on ? 'left-[22px]' : 'left-0.5')} />
       </button>
     </div>
   );
 }
 
-const TOKENS: { name: string; hex: string; usage: string; ring?: boolean }[] = [
-  { name: 'Canvas', hex: '#FFFFFF', usage: 'Primary background', ring: true },
-  { name: 'Surface', hex: '#F9FAFB', usage: 'Cards · sidebar · inputs', ring: true },
-  { name: 'Surface Deep', hex: '#F3F4F6', usage: 'Rails · tracks · hovers', ring: true },
-  { name: 'Ink', hex: '#111827', usage: 'Headings · primary text' },
-  { name: 'Dark Ash', hex: '#4B5563', usage: 'Secondary text · icons' },
-  { name: 'Brand Emerald', hex: '#059669', usage: 'Primary actions · live states' },
-  { name: 'Emerald Bright', hex: '#10B981', usage: 'Charts · highlights' },
+const TOKENS: { name: string; hex: string; usage: string; swatch: string }[] = [
+  { name: 'Cream Canvas', hex: '#F4F2EE', usage: 'Warm off-white app background', swatch: '#F4F2EE' },
+  { name: 'Matte White', hex: '#FFFFFF', usage: 'Cards & objects · rounded-3xl · 10/20/30 soft shadow', swatch: '#FFFFFF' },
+  { name: 'Deep Emerald', hex: '#0E6A47', usage: 'Solid 3D pill buttons · primary actions', swatch: '#0E6A47' },
+  { name: 'Amber Glass', hex: '#FFB347 → #FF7B00', usage: 'Highlight cards · peak moments · Grant Permit', swatch: 'linear-gradient(135deg,#FFB347,#FF7B00)' },
+  { name: 'Ink', hex: '#17211C', usage: 'Headings · primary text', swatch: '#17211C' },
 ];
 
 export function SettingsView({ notify }: { notify: Notify }) {
   return (
     <div className="grid items-start gap-4 xl:grid-cols-2">
-      {/* Organisation profile */}
       <Card className="animate-fade-up">
-        <CardHeader title="Organisation Profile" subtitle="Shown on public registers and passenger receipts" />
+        <CardHeader title="Ministry Profile" subtitle="Shown on permits, the public register and crew notifications" />
         <CardBody>
           <form
             className="grid gap-4 sm:grid-cols-2"
-            onSubmit={(e) => {
-              e.preventDefault();
-              notify('Settings saved', 'Organisation profile updated across the console, apps and public register.');
-            }}
+            onSubmit={(e) => { e.preventDefault(); notify('Settings saved', 'Ministry profile updated across permits, apps and the public register.'); }}
           >
             <div className="sm:col-span-2">
               <label className="label" htmlFor="org-name">Authority name</label>
-              <Input id="org-name" defaultValue="National Transport Commission" />
+              <Input id="org-name" defaultValue="Ministry of Transport — National Bus Digitization" />
             </div>
             <div>
               <label className="label" htmlFor="org-email">Operations email</label>
@@ -202,13 +136,6 @@ export function SettingsView({ notify }: { notify: Notify }) {
               <Input id="org-phone" defaultValue="+94 11 269 9400" />
             </div>
             <div>
-              <label className="label" htmlFor="org-tz">Timezone</label>
-              <select id="org-tz" className="input" defaultValue="Asia/Colombo">
-                <option>Asia/Colombo</option>
-                <option>UTC</option>
-              </select>
-            </div>
-            <div>
               <label className="label" htmlFor="org-lang">Console language</label>
               <select id="org-lang" className="input" defaultValue="English">
                 <option>English</option>
@@ -216,57 +143,62 @@ export function SettingsView({ notify }: { notify: Notify }) {
                 <option>தமிழ்</option>
               </select>
             </div>
+            <div>
+              <label className="label" htmlFor="org-tz">Timezone</label>
+              <select id="org-tz" className="input" defaultValue="Asia/Colombo">
+                <option>Asia/Colombo</option>
+                <option>UTC</option>
+              </select>
+            </div>
             <div className="flex gap-2.5 pt-1 sm:col-span-2">
-              <Button type="submit">
-                <Save className="h-4 w-4" /> Save Changes
-              </Button>
-              <Button variant="secondary" type="reset" onClick={() => notify('Reverted', 'Unsaved changes were discarded.')}>
-                Reset
-              </Button>
+              <Button type="submit"><Save className="h-4 w-4" /> Save Changes</Button>
+              <Button variant="secondary" type="reset" onClick={() => notify('Reverted', 'Unsaved changes were discarded.')}>Reset</Button>
             </div>
           </form>
 
           <div className="mt-6 divide-y divide-ash-100 border-t border-ash-100">
-            <Toggle label="Live GPS auto-refresh" description="Stream vehicle positions to this console every 5 seconds." defaultOn onChange={(on) => notify('GPS streaming', on ? 'Live position updates resumed.' : 'Live position updates paused for this console.')} />
-            <Toggle label="Delay & incident alerts" description="Notify duty officers when a trip runs more than 10 minutes late." defaultOn onChange={(on) => notify('Alerts', on ? 'Delay alerts enabled for duty officers.' : 'Delay alerts muted.')} />
-            <Toggle label="Weekly email digest" description="Monday 07:00 summary of revenue, ridership and fleet health." defaultOn={false} onChange={(on) => notify('Email digest', on ? 'You will receive the next digest on Monday at 07:00.' : 'Weekly digest switched off.')} />
+            <Toggle label="Pipeline bottleneck alerts" description="Warn the Ministry when a depot queue exceeds 48 hours." defaultOn onChange={(on) => notify('Alerts', on ? 'Bottleneck alerts enabled.' : 'Bottleneck alerts muted.')} />
+            <Toggle label="Permit automation webhooks" description="Push permit events to DMT, Police and insurance registries in real time." defaultOn onChange={(on) => notify('Webhooks', on ? 'Permit webhooks flowing to partner registries.' : 'Permit webhooks paused — permits still issue locally.')} />
+            <Toggle label="Weekly cabinet digest" description="Monday 07:00 island-wide digitization summary for the Minister’s office." defaultOn={false} onChange={(on) => notify('Cabinet digest', on ? 'First digest arrives Monday 07:00.' : 'Cabinet digest switched off.')} />
           </div>
         </CardBody>
       </Card>
 
-      {/* Design system tokens */}
+      {/* Design system — Neo-Apple 3D Tactile */}
       <Card className="animate-fade-up">
-        <CardHeader title="Design System" subtitle="Premium Light · the tokens behind every screen" />
+        <CardHeader title="Design System" subtitle="Neo-Apple 3D Tactile · soft neumorphism + glassy gradients" />
         <CardBody>
           <ul className="space-y-2.5">
             {TOKENS.map((t) => (
-              <li key={t.hex} className="flex items-center gap-3 rounded-xl border border-ash-100 bg-ash-50/60 p-3">
-                <span
-                  className={cn('h-10 w-10 shrink-0 rounded-[10px]', t.ring && 'ring-1 ring-ash-200')}
-                  style={{ background: t.hex }}
-                  aria-hidden
-                />
+              <li key={t.hex} className="flex items-center gap-3 rounded-[20px] bg-[#F7F4EC] p-3 shadow-insetSoft">
+                <span className="h-11 w-11 shrink-0 rounded-2xl shadow-neuSm ring-1 ring-cream-line" style={{ background: t.swatch }} aria-hidden />
                 <span className="min-w-0 flex-1">
-                  <span className="block text-sm font-semibold text-ink">{t.name}</span>
+                  <span className="block text-sm font-bold text-ink">{t.name}</span>
                   <span className="block truncate text-xs text-ash-500">{t.usage}</span>
                 </span>
-                <code className="tnum rounded-md bg-white px-2 py-1 text-xs font-semibold text-ash-700 ring-1 ring-ash-200">{t.hex}</code>
+                <code className="tnum rounded-full bg-white px-2.5 py-1 text-[11px] font-bold text-ash-700 shadow-btnMatte">{t.hex}</code>
               </li>
             ))}
           </ul>
 
-          <div className="mt-5 rounded-xl border border-ash-100 bg-ash-50/60 p-4">
-            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-ash-400">Typography — Plus Jakarta Sans</p>
-            <p className="mt-2 text-2xl font-extrabold tracking-tight text-ink">Headings · Extra Bold 800</p>
-            <p className="text-base font-bold text-ink">Subheads · Bold 700</p>
-            <p className="text-sm font-medium text-ash-700">Labels & buttons · Medium 500</p>
-            <p className="text-sm font-normal text-ash-500">Body copy · Regular 400 — calm, spacious, unmistakably premium.</p>
+          <div className="mt-5 rounded-[20px] bg-[#F7F4EC] p-4 shadow-insetSoft">
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-ash-400">Tactile controls — press them</p>
+            <div className="mt-3 flex flex-wrap gap-2.5">
+              <Button size="sm" onClick={() => notify('3D primary', 'Deep emerald #0E6A47 · top bevel light · sinks 1px when pressed.')}>Primary 3D</Button>
+              <Button variant="amber" size="sm" onClick={() => notify('Amber glass', 'Gradient #FFB347 → #FF7B00 reserved for highlight moments like Grant Final Permit.')}>Amber Glass</Button>
+              <Button variant="secondary" size="sm" onClick={() => notify('Matte secondary', 'A white object resting on the cream canvas.')}>Matte</Button>
+              <LockedButton size="sm" onExplain={() => notify('Locked by RBAC', 'The compliance pattern: a permanently disabled pill that explains itself.')}>Locked</LockedButton>
+            </div>
+            <p className="mt-3 flex items-center gap-1.5 text-xs font-medium text-ash-400">
+              <Lock className="h-3.5 w-3.5" /> Locked pills mark every capability an admin must never have.
+            </p>
           </div>
 
-          <div className="mt-4 flex flex-wrap gap-2">
-            <Button size="sm" onClick={() => notify('Primary action', 'Emerald is reserved for the one action that matters on each screen.')}>Primary</Button>
-            <Button variant="secondary" size="sm" onClick={() => notify('Secondary action', 'Quiet ash outline — supportive, never competing.')}>Secondary</Button>
-            <Button variant="ghost" size="sm" onClick={() => notify('Ghost action', 'For low-emphasis row and toolbar actions.')}>Ghost</Button>
+          <div className="relative mt-4 overflow-hidden rounded-[20px] bg-amber-glass p-4 text-white shadow-glowAmber">
+            <span className="pointer-events-none absolute -right-6 -top-8 h-24 w-24 rounded-full bg-white/25 blur-xl" aria-hidden />
+            <p className="relative text-[11px] font-extrabold uppercase tracking-[0.12em] text-white/85">Highlight card</p>
+            <p className="tnum relative mt-1 text-2xl font-extrabold">78% digitized</p>
+            <p className="relative text-xs font-medium text-white/90">Glassy amber gradient with frosted light orbs.</p>
           </div>
         </CardBody>
       </Card>

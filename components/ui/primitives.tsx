@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn, initials } from '@/lib/utils';
 
-/** Initial-based avatar in a soft ash (or emerald) tile — no photos required. */
+/** Initial-based avatar pressed into a soft neumorphic tile. */
 export function Avatar({
   name,
   size = 'md',
@@ -10,26 +10,24 @@ export function Avatar({
 }: {
   name: string;
   size?: 'sm' | 'md' | 'lg';
-  tone?: 'ash' | 'emerald' | 'ink';
+  tone?: 'ash' | 'emerald' | 'ink' | 'amber';
   className?: string;
 }) {
-  const sizes = { sm: 'h-8 w-8 text-[11px] rounded-lg', md: 'h-9 w-9 text-xs rounded-[10px]', lg: 'h-11 w-11 text-sm rounded-xl' };
+  const sizes = { sm: 'h-9 w-9 text-[11px] rounded-xl', md: 'h-10 w-10 text-xs rounded-2xl', lg: 'h-12 w-12 text-sm rounded-2xl' };
   const tones = {
-    ash: 'bg-ash-100 text-ash-700 ring-1 ring-ash-200',
-    emerald: 'bg-brand-50 text-brand-700 ring-1 ring-brand-100',
+    ash: 'bg-[#F1EEE6] text-ash-700 shadow-neuSm',
+    emerald: 'bg-brand-600 text-white shadow-btn3d',
     ink: 'bg-ink text-white',
+    amber: 'bg-amber-glass text-white shadow-btnAmber',
   };
   return (
-    <span
-      className={cn('inline-flex shrink-0 select-none items-center justify-center font-bold', sizes[size], tones[tone], className)}
-      aria-hidden
-    >
+    <span className={cn('inline-flex shrink-0 select-none items-center justify-center font-extrabold', sizes[size], tones[tone], className)} aria-hidden>
       {initials(name)}
     </span>
   );
 }
 
-/** Thin progress track — ash rail, emerald fill (amber/red when critical). */
+/** Neumorphic progress well — inset ash-cream track, deep-emerald fill. */
 export function ProgressBar({
   value,
   max = 100,
@@ -39,21 +37,25 @@ export function ProgressBar({
   value: number;
   max?: number;
   className?: string;
-  tone?: 'auto' | 'emerald' | 'ash';
+  tone?: 'auto' | 'emerald' | 'ash' | 'amber' | 'white';
 }) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
   const fill =
     tone === 'ash'
       ? 'bg-ash-400'
-      : tone === 'emerald'
-        ? 'bg-brand-500'
-        : pct >= 90
-          ? 'bg-red-500'
-          : pct >= 75
-            ? 'bg-amber-500'
-            : 'bg-brand-500';
+      : tone === 'white'
+        ? 'bg-white'
+        : tone === 'amber'
+          ? 'bg-amber-glass'
+          : tone === 'emerald'
+            ? 'bg-brand-600'
+            : pct >= 90
+              ? 'bg-red-500'
+              : pct >= 75
+                ? 'bg-tang-500'
+                : 'bg-brand-600';
   return (
-    <span className={cn('block h-1.5 w-full overflow-hidden rounded-full bg-ash-100', className)}>
+    <span className={cn('block h-2 w-full overflow-hidden rounded-full bg-[#EFEAE0] shadow-insetSoft', tone === 'white' && 'bg-white/30 shadow-none', className)}>
       <span className={cn('block h-full rounded-full transition-all duration-700', fill)} style={{ width: `${pct}%` }} />
     </span>
   );
@@ -65,19 +67,19 @@ export function PersonCell({ name, sub }: { name: string; sub?: string }) {
     <span className="flex min-w-0 items-center gap-2.5">
       <Avatar name={name} size="sm" />
       <span className="min-w-0">
-        <span className="block truncate text-sm font-medium text-ink">{name}</span>
+        <span className="block truncate text-sm font-semibold text-ink">{name}</span>
         {sub && <span className="block truncate text-xs text-ash-500">{sub}</span>}
       </span>
     </span>
   );
 }
 
-/** Route code chip — deep-black tile with the route number, like a bus board. */
+/** Route code pill — deep ink tile like a physical bus destination board. */
 export function RouteChip({ code, className }: { code: string; className?: string }) {
   return (
     <span
       className={cn(
-        'tnum inline-flex min-w-[52px] items-center justify-center rounded-lg bg-ink px-2 py-1 text-xs font-bold tracking-wide text-white',
+        'tnum inline-flex min-w-[54px] items-center justify-center rounded-full bg-ink px-2.5 py-1 text-xs font-extrabold tracking-wide text-white shadow-btnMatte',
         className,
       )}
     >

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-/** Card — flat white surface, 1px light-ash border, soft diffused shadow. */
+/** Card — a matte-white 3D object (rounded-3xl) resting on the cream canvas. */
 export function Card({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return <div className={cn('card', className)} {...props} />;
 }
@@ -18,9 +18,9 @@ export function CardHeader({
   className?: string;
 }) {
   return (
-    <div className={cn('flex flex-wrap items-start justify-between gap-3 px-5 pt-5 sm:px-6', className)}>
+    <div className={cn('flex flex-wrap items-start justify-between gap-3 px-6 pt-6', className)}>
       <div className="min-w-0">
-        <h3 className="truncate text-[15px] font-bold tracking-tight text-ink">{title}</h3>
+        <h3 className="truncate text-base font-extrabold tracking-tight text-ink">{title}</h3>
         {subtitle && <p className="mt-0.5 text-[13px] font-normal text-ash-500">{subtitle}</p>}
       </div>
       {action}
@@ -29,5 +29,5 @@ export function CardHeader({
 }
 
 export function CardBody({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('px-5 pb-5 pt-4 sm:px-6 sm:pb-6', className)} {...props} />;
+  return <div className={cn('px-6 pb-6 pt-4', className)} {...props} />;
 }

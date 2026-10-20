@@ -268,8 +268,8 @@ export function DataTable<T>({
               onClick={() => setPage(p)}
               aria-current={p === safePage ? 'page' : undefined}
               className={cn(
-                'tnum h-8 min-w-8 rounded-lg px-2 text-[13px] font-medium transition-all',
-                p === safePage ? 'bg-brand-600 text-white shadow-cta' : 'text-ash-600 hover:bg-ash-100 hover:text-ink',
+                'tnum h-9 min-w-9 rounded-full px-2 text-[13px] font-semibold transition-all',
+                p === safePage ? 'bg-brand-600 text-white shadow-btn3d' : 'text-ash-600 hover:bg-white hover:shadow-btnMatte hover:text-ink',
               )}
             >
               {p}
