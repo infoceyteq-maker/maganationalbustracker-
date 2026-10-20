@@ -1,0 +1,99 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/*  National Bus Digitization Project — Premium Light Design System    */
+/*  Canvas #FFFFFF · Surface #F9FAFB · Ink #111827 · Emerald #059669   */
+/* ------------------------------------------------------------------ */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-white text-ink font-sans antialiased;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  ::selection {
+    background: #d1fae5;
+    color: #064e3b;
+  }
+
+  /* Slim, discreet scrollbars that respect the light theme */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: #d1d5db transparent;
+  }
+  *::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  *::-webkit-scrollbar-thumb {
+    background: #d1d5db;
+    border-radius: 999px;
+  }
+  *::-webkit-scrollbar-thumb:hover {
+    background: #9ca3af;
+  }
+  *::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  /* Consistent, accessible emerald focus ring */
+  :focus-visible {
+    outline: 2px solid rgba(16, 185, 129, 0.55);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  /* Card — flat, 1px light-ash border, whisper-soft shadow */
+  .card {
+    @apply rounded-2xl border border-ash-200 bg-white shadow-card;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:-translate-y-0.5 hover:shadow-lift hover:border-ash-300;
+  }
+
+  /* Inputs — light ash border, emerald focus ring */
+  .input {
+    @apply h-10 w-full rounded-[10px] border border-ash-200 bg-white px-3.5 text-sm text-ink
+      placeholder:text-ash-400 transition-all duration-200
+      hover:border-ash-300 focus:border-brand-500 focus:outline-none
+      focus:ring-4 focus:ring-brand-500/10;
+  }
+
+  .label {
+    @apply mb-1.5 block text-[13px] font-medium text-ash-700;
+  }
+
+  /* Table */
+  .th {
+    @apply px-4 py-3 text-left text-[11px] font-semibold uppercase tracking-[0.08em] text-ash-500;
+  }
+  .td {
+    @apply px-4 py-3.5 text-sm text-ash-700;
+  }
+
+  /* Kilometric / numeric alignment for data */
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Schematic map backdrop (live operations) */
+  .map-grid {
+    background-image:
+      linear-gradient(to right, rgba(17, 24, 39, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(17, 24, 39, 0.045) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+
+  .map-water {
+    background: linear-gradient(160deg, #ecfdf5 0%, #f0fdfa 45%, #f9fafb 100%);
+  }
+}
